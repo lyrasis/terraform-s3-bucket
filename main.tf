@@ -7,6 +7,15 @@ resource "aws_s3_bucket" "bucket" {
     permissions = ["FULL_CONTROL"]
   }
 
+  lifecycle_rule {
+    id      = "autodelete"
+    enabled = true
+
+    expiration {
+      days = var.expiration_days
+    }
+  }
+
   tags = var.tags
 }
 

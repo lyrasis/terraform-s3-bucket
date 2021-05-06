@@ -14,6 +14,7 @@ locals {
   }
   name_prefix = "is-prod"
   buckets     = ["clienta", "clientb"]
+  expiration_days = 5 # optional. default 30 days
 }
 
 module "s3_bucket" {
