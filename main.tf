@@ -23,11 +23,11 @@ resource "aws_s3_bucket" "bucket" {
 data "aws_iam_policy_document" "bucket" {
   statement {
     actions = [
+      "s3:ListBucket",
       "s3:GetObject",
       "s3:GetObjectAcl",
-      "s3:ListBucket",
     ]
-    resources = [aws_s3_bucket.bucket.arn]
+    resources = [aws_s3_bucket.bucket.arn,"${aws_s3_bucket.bucket.arn}/*"]
     effect = "Allow"
   }
 }
