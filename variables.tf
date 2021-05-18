@@ -9,7 +9,7 @@ variable "name" {
 variable "expiration_days" {
   description = "Number of days before objects in the bucket are to be deleted."
   type        = number
-  default     = 30
+  default     = 0
 }
 
 variable "region" {
@@ -18,11 +18,6 @@ variable "region" {
 
 variable "vpc_id" {
   description = "The ID of the VPC to which the bucket should be attached."
-  type        = string
-}
-
-variable "route_table_id" {
-  description = "The ID of the routing table with which the bucket should be associated."
   type        = string
 }
 
