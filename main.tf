@@ -1,22 +1,37 @@
 resource "aws_s3_bucket" "bucket" {
   bucket = var.name
+  tags = var.tags
+}
 
-  grant {
-    id          = data.aws_canonical_user_id.current_user.id
-    type        = "CanonicalUser"
-    permissions = ["FULL_CONTROL"]
+resource "aws_s3_bucket_acl" "bucket" {
+  bucket = aws_s3_bucket.bucket.id
+
+  access_control_policy {
+    grant {
+      grantee {
+        id   = data.aws_canonical_user_id.current_user.id
+        type = "CanonicalUser"
+      }
+      permission = "FULL_CONTROL"
+    }
+
+    owner {
+      id = data.aws_canonical_user_id.current_user.id
+    }
   }
+}
 
-  lifecycle_rule {
-    id      = "autodelete"
-    enabled = true
+resource "aws_s3_bucket_lifecycle_configuration" "bucket" {
+  bucket = aws_s3_bucket.bucket.id
+
+  rule {
+    id     = "autodelete"
+    status = var.expiration_days > 0 ? "Enabled" : "Disabled"
 
     expiration {
       days = var.expiration_days
     }
   }
-
-  tags = var.tags
 }
 
 data "aws_iam_policy_document" "bucket" {

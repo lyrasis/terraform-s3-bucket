@@ -3,6 +3,11 @@
 This is a Terraform module that can be used to create an S3 bucket, along with
 an IAM user with access to it.
 
+## NOTE:
+Version 1 of this module supports aws provider < 4
+Version 2 requires aws provider version >= 4
+see: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/version-4-upgrade#s3-bucket-refactor
+
 ## Usage Example
 
 ```terraform
@@ -15,7 +20,7 @@ locals {
   name_prefix = "is-prod"
   buckets     = ["clienta", "clientb"]
   region      = "us-west-2"
-  expiration_days = 30 # optional. default 0 days
+  expiration_days = 30 # optional. by default objects will not expire
 }
 
 module "s3_bucket" {
@@ -29,7 +34,7 @@ module "s3_bucket" {
 }
 ```
 
-Additionally, your containing terraform project will need to create an S3 VPC
+Additionally, your containing terraform project will probably want to create an S3 VPC
 endpoint. Something along these lines:
 
 ```terraform
