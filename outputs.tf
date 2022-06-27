@@ -11,5 +11,5 @@ output "id" {
 }
 
 output "rendered_policy" {
-  value = data.aws_iam_policy_document.bucket.json
+  value = var.read_only ? data.aws_iam_policy_document.read_only.json : data.aws_iam_policy_document.read_write.json
 }
