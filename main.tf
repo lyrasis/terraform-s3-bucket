@@ -34,8 +34,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket" {
   }
 }
 
-data "aws_iam_policy_document" "bucket" {
+data "aws_iam_policy_document" "read_only" {
   statement {
+    sid = "ReadOnlyBucketPolicy"
     actions = [
       "s3:ListBucket",
       "s3:GetObject",
@@ -46,10 +47,25 @@ data "aws_iam_policy_document" "bucket" {
   }
 }
 
+data "aws_iam_policy_document" "read_write" {
+  statement {
+    sid = "ReadWriteBucketPolicy"
+    actions = [
+      "s3:ListBucket",
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject",
+      "s3:GetObjectAcl",
+    ]
+    resources = [aws_s3_bucket.bucket.arn,"${aws_s3_bucket.bucket.arn}/*"]
+    effect = "Allow"
+  }
+}
+
 resource "aws_iam_policy" "bucket_policy" {
   name        = "${var.name}-policy"
   description = "${var.name} S3 policy"
-  policy = data.aws_iam_policy_document.bucket.json
+  policy = var.read_only ? data.aws_iam_policy_document.read_only.json : data.aws_iam_policy_document.read_write.json
 }
 
 data "aws_canonical_user_id" "current_user" {}

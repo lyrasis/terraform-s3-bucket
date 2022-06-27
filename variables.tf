@@ -26,3 +26,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "read_only" {
+  description = "Whether the IAM user is limited to read_only access"
+  type = bool
+  default = true
+}
